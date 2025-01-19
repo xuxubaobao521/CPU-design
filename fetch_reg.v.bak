@@ -1,0 +1,81 @@
+`include "define.v"
+module fetch_reg(
+	//input
+	input wire 					  	clk_i,
+	input wire 					   	F_bubble_i,
+	input wire					   	F_stall_i,
+	//OP
+	input wire [`OP_WIDTH - 1:0]    F_epcode_i,
+	input wire [`STORE_WIDTH - 1:0] F_store_op_i,
+	input wire [`LOAD_WIDTH - 1:0]  F_load_op_i,
+	input wire [`CSR_WIDTH - 1:0]	F_csr_op_i,
+	input wire [`BRANCH_WIDTH - 1:0]F_branch_op_i,
+	input wire [`ALU_WIDTH - 1:0]   F_ALU_op_i,
+	input wire					   	F_sel_reg_i,
+	input wire [`PC_WIDTH - 1:0]    F_PC_i,
+	input wire                      F_need_dstE_i,
+	//data
+	input reg [4:0]                 F_rs1_i,
+	input reg [4:0]                 F_rs2_i,
+	input reg [`XLEN - 1:0]         F_imme_i,
+	//addr
+	output reg [4:0]                F_dstE_i,
+	output reg [11:0]				F_csr_addr_i,
+	//output
+	//OP
+	output reg [`OP_WIDTH - 1:0]    	FD_epcode_o,
+	output reg [`STORE_WIDTH - 1:0]  	FD_store_op_o,
+	output reg [`LOAD_WIDTH - 1:0]   	FD_load_op_o,
+	output reg [`CSR_WIDTH - 1:0]	  	FD_csr_op_o,
+	output reg [`BRANCH_WIDTH - 1:0] 	FD_branch_op_o,
+	output reg [`ALU_WIDTH - 1:0]    	FD_ALU_op_o,
+	output reg					   	  	FD_sel_reg_o,
+	output reg [`PC_WIDTH - 1:0]     	FD_PC_o,
+	output reg                       	FD_need_dstE_o,
+	//data
+	output reg [4:0]                 	FD_rs1_o,
+	output reg [4:0]                 	FD_rs2_o,
+	output reg [`XLEN - 1:0]         	FD_imme_o,
+	//addr
+	output reg [4:0]                 	FD_dstE_o,
+	output reg [11:0]				  	FD_csr_addr_o
+);
+	always @(posedge clk_i) begin
+		if(F_bubble_i) begin
+			FD_epcode_o 	<= 0;
+			FD_store_op_o 	<= 0;
+			FD_load_op_o 	<= 0;
+			FD_csr_op_o 	<= 0;
+			FD_branch_op_o 	<= 0;
+			FD_ALU_op_o 	<= 0;
+			FD_sel_reg_o 	<= 0;
+			FD_PC_o 		<= 0;
+			FD_need_dstE_o 	<= 0;
+			//data
+			FD_rs1_o 		<= 0;
+			FD_rs2_o 		<= 0;
+			FD_imme_o 		<= 0;
+			//addr
+			FD_dstE_o 		<= 0;
+			FD_csr_addr_o 	<= 0;
+		end
+		else if(~F_stall_i) begin
+			FD_epcode_o 	<= F_epcode_i;
+			FD_store_op_o 	<= F_store_op_i;
+			FD_load_op_o 	<= F_load_op_i;
+			FD_csr_op_o 	<= F_csr_op_i;
+			FD_branch_op_o 	<= F_branch_op_i;
+			FD_ALU_op_o 	<= F_ALU_op_i;
+			FD_sel_reg_o 	<= F_sel_reg_i;
+			FD_PC_o 		<= F_PC_i;
+			FD_need_dstE_o 	<= F_need_dstE_i;
+			//data
+			FD_rs1_o 		<= F_rs1_i;
+			FD_rs2_o 		<= F_rs2_i;
+			FD_imme_o 		<= F_imme_i;
+			//addr
+			FD_dstE_o 		<= F_dstE_i;
+			FD_csr_addr_o 	<= F_csr_addr_i;
+		end
+	end
+endmodule
